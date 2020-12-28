@@ -1,9 +1,19 @@
+body{
+  background: #303030;
+  color:blanchedalmond;
+  padding: 0px;
+  margin:0px;
+ /*display:flex;*/
+  justify-content:center;
+}
+
 #can {
   width:300px;
   height:150px;
-  position:absolute;
+  background-color:blanchedalmond;
+  /*position:absolute;*/
   border: 2px solid;
-
+  cursor: url(../imgs/pencil.png) 0 25, default;
 }
 
 #animate{
@@ -13,7 +23,52 @@
   color: white;
   border-radius:5px;
   cursor: pointer;
-  margin: 0 auto;
+  /*margin: 0 auto;*/
 }
 
+.sliderscontainer {
+  width: 400px;
+  height:fit-content;
+  /*margin: 0 auto;*/
+}
+
+.slider{
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  box-shadow: 0px 1px 10px 1px black;
+}
+
+.single_slider{
+  display: inline-block;
+  width: 100%;
+  height:fit-content;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: red;
+  cursor: pointer;
+}
+
+slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
 

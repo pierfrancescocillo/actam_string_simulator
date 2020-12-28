@@ -144,25 +144,45 @@ function Discretize(){
  //console.log(NewPoints);
 };
 
-//---------------------------------------------------------------------
-//constant definitions
-const T = 70;
-const L = 0.65;
-const m = 2.33 * Math.pow(10,-3);
-const inte = 50;
-const nu = (2 * m * 0.5)*5;
-//const nu = (2*Math.PI*Math.sqrt(T*m)) / L +0.1
-//const nu = 0;
-const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
-const alpha = nu/(2*m);
-//--------------------------------------------------------------------
+ //---------------------------------------------------------------------
+  //constant definitions
+  var T = document.getElementById("sl_T").value; //
+  const L = document.getElementById("sl_L").value; //0.65;
+  const m = document.getElementById("sl_m").value; //2.33 * Math.pow(10,-3);
+  const inte = 50;
+  const nu = document.getElementById("sl_nu").value; //= (2 * m * 0.5)*5;
+  //const nu = (2*Math.PI*Math.sqrt(T*m)) / L +0.1
+  //const nu = 0;
+  const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
+  const alpha = nu/(2*m);
 
+  //Assigning value to the sliders
+  document.getElementById("T_value").innerHTML = document.getElementById("sl_T").value;
+  document.getElementById("sl_T").oninput = function(){
+    document.getElementById("T_value").innerHTML = this.value;
+  }
+
+  document.getElementById("L_value").innerHTML = document.getElementById("sl_L").value;
+  document.getElementById("sl_L").oninput = function(){
+    document.getElementById("L_value").innerHTML = this.value;
+  }
+
+  document.getElementById("m_value").innerHTML = document.getElementById("sl_m").value;
+  document.getElementById("sl_m").oninput = function(){
+    document.getElementById("m_value").innerHTML = this.value;
+  }
+
+  document.getElementById("nu_value").innerHTML = document.getElementById("sl_nu").value;
+  document.getElementById("sl_nu").oninput = function(){
+    document.getElementById("nu_value").innerHTML = this.value;
+  }
+  //--------------------------------------------------------------------
 
 //  ------------ANIMATION CODE--------------- 
 function Animation(){
 
   const n_points = NewPoints.length;
-  console.clear();
+  //console.clear();
   //console.log(NewPoints);
 
   var Xcord = getCol(NewPoints,0);
@@ -260,7 +280,7 @@ function Animation(){
 function Animation_damped(){
 
   const n_points = NewPoints.length;
-  console.clear();
+  //console.clear();
   //console.log(NewPoints);
 
   var Xcord = getCol(NewPoints,0);

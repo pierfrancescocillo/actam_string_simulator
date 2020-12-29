@@ -9,6 +9,31 @@ const width= can.width;
 canvas.addEventListener('mousedown', mouseDown, false);
 canvas.addEventListener('mousemove', mouseMove, false);
 
+function reset_func(){
+  document.getElementById("can").style.cursor = "url(../imgs/pencil.png) 0 25, default";
+  prevX = 0;
+  currX = 0;
+  prevY = 0;
+  currY = 0;
+  mintol=0;
+  maxtol=width-10;
+  move=false;
+  down=false;
+  empty=true;
+  complete=false;
+  NewPoints=[];
+  startAnim = false;
+  //var pointsX= [];
+  //var pointsY=[];
+  startDrawing=false;
+  discrete= false;
+  points=[];
+  ctx.clearRect(0,0,width,height)
+  canvas.addEventListener('mousedown', mouseDown, false);
+  canvas.addEventListener('mousemove', mouseMove, false);
+}
+
+
 var prevX = 0;
 var currX = 0;
 var prevY = 0;
@@ -108,12 +133,12 @@ function ChangeYcord(NewPoints){
 };
 
 function Discretize(){
-var interpolateLineRange = require( 'line-interpolate-points' );
- NewPoints = interpolateLineRange(points, 120)
- startAnim = true;
- DrawPoints(NewPoints);
- ChangeYcord(NewPoints);
- //console.log(NewPoints);
+  var interpolateLineRange = require( 'line-interpolate-points' );
+  NewPoints = interpolateLineRange(points, 120)
+  startAnim = true;
+  DrawPoints(NewPoints);
+  ChangeYcord(NewPoints);
+  //console.log(NewPoints);
 };
 
 //Assigning value to the sliders------------------------------------------------------------
@@ -239,6 +264,7 @@ function Animation(){
 //---------ANIMATION DAMPED CODE--------------------
 function Animation_damped(){
 
+  var bool1 = false;
   document.getElementById("can").style.cursor = "default";
 
   //constant definitions----------------------------------------------------------
@@ -334,9 +360,14 @@ function Animation_damped(){
   var cosh = Array(n_modes).fill(0);
 
   console.log("starting animation...");
-  document.getElementById("buffering").style.display = "none";
   var time=0;
-  setInterval(goOn,inte);
+  setInterval(function(){
+    if (bool1){
+        return
+    }else{
+      goOn();
+    }
+  },inte);
 
   //functions definition
   function goOn() {
@@ -375,12 +406,16 @@ function Animation_damped(){
       }
     }
     render(); 
+    reset.onclick = function(){
+      bool1 = true;
+      model = Array(n_points).fill(0);
+      reset_func();
+    }
   }
     
 }
 
 animate.onclick = function() {if(startAnim){
-  document.getElementById("buffering").style.display = "inline-block";
   Animation_damped();
   }
 };

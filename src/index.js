@@ -161,6 +161,11 @@ document.getElementById("nu_value").innerHTML = document.getElementById("sl_nu")
 document.getElementById("sl_nu").oninput = function(){
   document.getElementById("nu_value").innerHTML = this.value;
 }
+
+document.getElementById("max_dur_sound_value").innerHTML = document.getElementById("sl_max_dur_sound").value;
+document.getElementById("sl_max_dur_sound").oninput = function(){
+  document.getElementById("max_dur_sound_value").innerHTML = this.value;
+}
 //--------------------------------------------------------------------
 
 //  ------------ANIMATION CODE--------------- 
@@ -272,11 +277,12 @@ function Animation_damped(){
   const L = document.getElementById("sl_L").value; //0.65;
   const m = document.getElementById("sl_m").value; //2.33 * Math.pow(10,-3);
   const inte = 50;
-  const nu = document.getElementById("sl_nu").value; //= (2 * m * 0.5)*5;
+  const nu = document.getElementById("sl_nu").value; //(2 * m * 0.5)*5;
   //const nu = (2*Math.PI*Math.sqrt(T*m)) / L +0.1
   //const nu = 0;
   const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
   const alpha = nu/(2*m);
+  const dur = document.getElementById("sl_max_dur_sound").value;
   //--------------------------------------------------------------------------------
 
   const n_points = NewPoints.length;
@@ -341,7 +347,7 @@ function Animation_damped(){
 
   w.pop(); w.shift(); math.flatten(w);
 
-  //compute alpha and beta parameters
+  //compute a_n and b_n parameters
 
   var b_n = Array(n_modes).fill(0);
   var a_n = Array(n_modes).fill(0);
@@ -368,6 +374,41 @@ function Animation_damped(){
       goOn();
     }
   },inte);
+
+  // --------------SOUND-------------------
+  let audioContext = new AudioContext();
+  var myBuffer=[];
+  var i;
+  var gainNode=[];
+  var sampleNumber;
+  var temp;
+  var document.getElementById("sl_max_dur_sound").value;
+  var gains=[];
+  var sr = 22050;
+
+  //riempi il buffer
+  for(i=0; i<n_modes; i++){
+    myBuffer[i] = audioContext.createBuffer(1, sr*dur, sr);
+    //let myBuffer=audioContext.createBuffer(1,441000,44100);
+    //let Arraudio=myBuffer.getChannelData(0);
+    let Arraudio = myBuffer[i].getChannelData(0); 
+    gainNode[i]= audioContext.createGain();
+    //var exp= [];
+    //
+    for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
+      temp=1/sr;
+      Arraudio[sampleNumber] = Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+    }
+  }
+  //start audio          
+  for(i=0; i<n_modes; i++){
+    let src = audioContext.createBufferSource();
+    src.buffer = myBuffer[i];
+    //src.connect(gainNode[i]);
+    src.connect(audioContext.destination);
+    src.start();
+  }
+
 
   //functions definition
   function goOn() {

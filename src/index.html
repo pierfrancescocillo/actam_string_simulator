@@ -10,17 +10,21 @@
     </head>
     <body>
         
-        <canvas id="can"></canvas>
+        <div style="display: grid">
+            <canvas id="can"></canvas>
+            <input style="width: 300px; margin: 0px 2% 0px 2%" type="range" min="0" max="120" step="1" value="80" class="slider" id="pick_up"><p>Pick-up position</p>
+        </div>
         <div id="buffering" class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <div id="animate">Animate!</div>
         <div id="reset">Reset</div>
         
 
         <div class="sliderscontainer">
-            <div class="single_slider"><input type="range" min="40" max="100" step="1" value="70" class="slider" id="sl_T"><p>Tension: <span id="T_value"></span></p></div>
-            <div class="single_slider"><input type="range" min="0.05" max="2" step="0.05" value="0.65" class="slider" id="sl_L"><p>Length: <span id="L_value"></span></p></div>
-            <div class="single_slider"><input type="range" min="0.001" max="0.01" step="0.00001" value="0.00233" class="slider" id="sl_m"><p>Linear density: <span id="m_value"></span></p></div>
-            <div class="single_slider"><input type="range" min="0" max="1" step="0.00001" value="0" class="slider" id="sl_nu"><p>Damping value: <span id="nu_value"></span></p></div>
+            <div class="single_slider"><input type="range" min="40" max="100" step="1" value="70" class="slider" id="sl_T"><p>Tension: <span id="T_value"></span> [N]</p></div>
+            <div class="single_slider"><input type="range" min="0.05" max="2" step="0.05" value="0.65" class="slider" id="sl_L"><p>Length: <span id="L_value"></span> [m]</p></div>
+            <div class="single_slider"><input type="range" min="0.001" max="0.01" step="0.00001" value="0.00233" class="slider" id="sl_m"><p>Linear density: <span id="m_value"></span> [kg/m]</p></div>
+            <div class="single_slider"><input type="range" min="0" max="0.5" step="0.00001" value="0" class="slider" id="sl_nu"><p>Damping coefficient: <span id="nu_value"></span></p></div>
+            <div class="single_slider"><input type="range" min="0" max="10" step="0.2" value="5" class="slider" id="sl_max_dur_sound"><p>Maximum duration of the sound: <span id="max_dur_sound_value"></span> [s]</p></div>
         </div>
 
         <script src="index.js"></script>   

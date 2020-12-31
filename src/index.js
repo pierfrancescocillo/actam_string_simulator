@@ -378,15 +378,15 @@ function Animation_damped(){
   // --------------SOUND-------------------
   let audioContext = new AudioContext();
   var myBuffer=[];
-  var i;
+
   var gainNode=[];
-  var sampleNumber;
   var temp;
-  var document.getElementById("sl_max_dur_sound").value;
+  var pickup = document.getElementById("sl_max_dur_sound").value;
   var gains=[];
   var sr = 22050;
 
   //riempi il buffer
+  var i;
   for(i=0; i<n_modes; i++){
     myBuffer[i] = audioContext.createBuffer(1, sr*dur, sr);
     //let myBuffer=audioContext.createBuffer(1,441000,44100);
@@ -397,7 +397,7 @@ function Animation_damped(){
     //
     for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
       temp=1/sr;
-      Arraudio[sampleNumber] = Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+      Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
     }
   }
   //start audio          

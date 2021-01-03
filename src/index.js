@@ -319,6 +319,7 @@ function Animation_damped(){
   //const nu = (2*Math.PI*Math.sqrt(T*m)) / L +0.1
   //const nu = 0;
   const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
+  console.log("i_bar: " + String(i_bar))
   const alpha = nu/(2*m);
   const dur = document.getElementById("sl_max_dur_sound").value;
   var pickup = document.getElementById("sl_max_dur_sound").value;
@@ -376,7 +377,7 @@ function Animation_damped(){
   var i,j;
   for(j=0;j<n_points;j++){
     for(i=0;i<n_modes;i++){
-      Phi = math.subset(Phi, math.index(j,i), Math.sin((i+1)*Math.PI* ((j)*L/(n_points-1)) / L));
+      Phi[j][i] = Math.sin((i+1)*Math.PI* ((j)*L/(n_points-1)) / L);
     }
   }
 
@@ -400,7 +401,6 @@ function Animation_damped(){
   var b_n = Array(n_modes).fill(0);
   var a_n = Array(n_modes).fill(0);
 
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
   console.log("computing a_n and b_n");
   b_n = math.flatten(math.multiply(math.inv(Phi),math.transpose(w)));
 
@@ -437,9 +437,17 @@ function Animation_damped(){
     let Arraudio = myBuffer[i].getChannelData(0); 
     //var exp= [];
     //
-    for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
-      temp=1/sr;
-      Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+
+    if(i<i_bar){
+      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
+        temp=1/sr;
+        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sinh(omega[i]*temp*sampleNumber) + b_n[i]*Math.cosh(omega[i]*temp*sampleNumber));
+      }
+    }else{
+      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
+        temp=1/sr;
+        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+      }
     }
   }
   //start audio          
@@ -529,10 +537,7 @@ function Animation_damped(){
         
       }
     }
-    console.log("model: ");
-    console.log(model);
-    console.log("model_spec: ");
-    console.log(model_spec);
+   
     render(); 
     render_spec();
     reset.onclick = function(){

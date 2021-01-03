@@ -1,10 +1,16 @@
 console.clear();
 
 var canvas = document.getElementById("can");
+var canvas_s = document.getElementById("spec_can");
 
 var ctx = canvas.getContext('2d');
 const height= can.height;
 const width= can.width;
+
+var ctx_s = canvas_s.getContext('2d');
+const spec_h= spec_can.height;
+const spec_w= spec_can.width;
+
 //ctx.translate()
 canvas.addEventListener('mousedown', mouseDown, false);
 canvas.addEventListener('mousemove', mouseMove, false);
@@ -29,6 +35,7 @@ function reset_func(){
   discrete= false;
   points=[];
   ctx.clearRect(0,0,width,height)
+  ctx_s.clearRect(0,0,spec_h,spec_w)
   canvas.addEventListener('mousedown', mouseDown, false);
   canvas.addEventListener('mousemove', mouseMove, false);
 
@@ -37,7 +44,6 @@ function reset_func(){
   var srcs = [];
   var gainNode=[];
   var temp;
-  var pickup = document.getElementById("sl_max_dur_sound").value;
   var gains=[];
   var sr = 22050;
 }
@@ -74,7 +80,6 @@ var myBuffer=[];
 var srcs = [];
 var gainNode=[];
 var temp;
-var pickup = document.getElementById("sl_max_dur_sound").value;
 var gains=[];
 var sr = 22050;
 
@@ -145,6 +150,18 @@ function DrawPoints(NewPoints){
   ctx.closePath();
 };
 
+function DrawLines(NewPoints){
+  ctx_s.clearRect(0,0,spec_h,spec_w)
+  ctx_s.beginPath();
+  for(i=0; i<NewPoints.length; i++){
+  ctx_s.fillRect(NewPoints[i][0], NewPoints[i][1], 3, spec_h - NewPoints[i][1])
+  }
+  ctx_s.strokeStyle= "red";
+  ctx_s.stroke();
+  ctx_s.closePath();
+};
+
+
 function ChangeYcord(NewPoints){
     var i;
   for(i=0; i<NewPoints.length; i++){
@@ -188,7 +205,7 @@ document.getElementById("sl_max_dur_sound").oninput = function(){
 }
 //--------------------------------------------------------------------
 
-//  ------------ANIMATION CODE--------------- 
+/*  ------------ANIMATION CODE--------------- 
 function Animation(){
 
   const n_points = NewPoints.length;
@@ -210,7 +227,7 @@ function Animation(){
   function render(){
     var i;
     for(i=0;i<model.length;i++){
-      changedModel[i][1] = 75 - model[i];
+      changedModel[i][1] = height/2 - model[i];
     }
   
     DrawPoints(changedModel);
@@ -246,7 +263,7 @@ function Animation(){
         w[i] = pick_point * (i)/ (pick_point - n_points) - pick_point*n_points / (pick_point - n_points);
     }
   }
-  */
+  
   Phi.pop(); Phi.shift();
 
   w.pop(); w.shift(); math.flatten(w);
@@ -285,6 +302,7 @@ function Animation(){
   }
   
 }
+*/
 
 //---------ANIMATION DAMPED CODE--------------------
 function Animation_damped(){
@@ -303,6 +321,7 @@ function Animation_damped(){
   const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
   const alpha = nu/(2*m);
   const dur = document.getElementById("sl_max_dur_sound").value;
+  var pickup = document.getElementById("sl_max_dur_sound").value;
   //--------------------------------------------------------------------------------
 
   const n_points = NewPoints.length;
@@ -311,14 +330,19 @@ function Animation_damped(){
 
   var Xcord = getCol(NewPoints,0);
   var changedModel = math.zeros(n_points,2)._data;
+  var Adapted = math.zeros(n_points,2)._data;
   //console.log(changedModel);
   var i;
   for(i=0;i<n_points;i++){
     changedModel[i][0] = Xcord[i];
   }
+  for(i=0;i<n_points;i++){
+    Adapted[i][0] = Xcord[i] * 2;
+  }
 
   //MODEL
   var model = Array(n_points).fill(0);
+  var model_spec = Array(n_points).fill(0);
 
   //VIEW
   function render(){
@@ -330,8 +354,12 @@ function Animation_damped(){
     DrawPoints(changedModel);
   }
 
-
-
+  function render_spec(){
+    for(i=0;i<n_points;i++){
+      Adapted[i][1] = spec_h - model_spec[i];
+    }
+    DrawLines(Adapted);
+  }
 
   const n_modes = n_points - 2;
   var omega = Array(n_modes).fill(0);
@@ -384,6 +412,9 @@ function Animation_damped(){
 
   var cos = Array(n_modes).fill(0);
   var cosh = Array(n_modes).fill(0);
+  var A_n = Array(n_modes).fill(0);
+  var A_nh = Array(n_modes).fill(0);
+
 
   console.log("starting animation...");
   var time=0;
@@ -453,10 +484,21 @@ function Animation_damped(){
     var i;
     for(i=0;i<n_modes;i++){
       cos[i] = a_n[i]*Math.sin(omega[i]*time) + b_n[i]*Math.cos(omega[i]*time);
-    }
-    for(i=0;i<n_modes;i++){
       cosh[i] = a_n[i]*Math.sinh(omega[i]*time) + b_n[i]*Math.cosh(omega[i]*time);
     }
+    //computing norm. constant
+    var test = []
+    for(i=0;i<n_modes;i++){
+      test[i] = b_n[i] * Phi[pickup][i] / Math.cos(Math.atan(-a_n[i]/b_n[i]))
+    }
+    var norm = Math.max.apply(Math, test);
+
+    for(i=0;i<n_modes;i++){
+      A_n[i] = b_n[i] * Phi[pickup][i] * Math.exp(-alpha*time) / Math.cos(Math.atan(-a_n[i]/b_n[i])) * (spec_h-10)/norm
+      A_nh[i] = b_n[i] * Phi[pickup][i] * Math.exp(-alpha*time) / Math.cosh(Math.atanh(a_n[i]/b_n[i])) * (spec_h-10)/norm
+    }
+
+
     console.log("updating the model");
     var i;
     for(i=0;i<n_points;i++){
@@ -472,16 +514,27 @@ function Animation_damped(){
           ,
           cos.slice(Math.floor(i_bar),n_modes)
           );
+          if(i<i_bar){
+            model_spec[i] = A_nh[i];
+          }else{
+            model_spec[i] = A_n[i];
+          }
         }else{
           model[i] = Math.exp(-alpha*time) * math.dot(math.flatten(math.subset(Phi,math.index(i-1,math.range(0,n_modes))))
           ,
           cos
           );
+          model_spec[i] = A_n[i];
         }
         
       }
     }
+    console.log("model: ");
+    console.log(model);
+    console.log("model_spec: ");
+    console.log(model_spec);
     render(); 
+    render_spec();
     reset.onclick = function(){
       bool1 = true;
       model = Array(n_points).fill(0);

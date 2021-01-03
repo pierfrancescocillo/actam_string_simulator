@@ -31,9 +31,18 @@ function reset_func(){
   ctx.clearRect(0,0,width,height)
   canvas.addEventListener('mousedown', mouseDown, false);
   canvas.addEventListener('mousemove', mouseMove, false);
+
+  var audioContext = new AudioContext();
+  var myBuffer=[];
+  var srcs = [];
+  var gainNode=[];
+  var temp;
+  var pickup = document.getElementById("sl_max_dur_sound").value;
+  var gains=[];
+  var sr = 22050;
 }
 
-
+//Canvas variables
 var prevX = 0;
 var currX = 0;
 var prevY = 0;
@@ -58,6 +67,17 @@ function KeepTrack(X,Y){
     return;}
  points.push([X,Y]);
 };
+
+//Sound Variables
+var audioContext = new AudioContext();
+var myBuffer=[];
+var srcs = [];
+var gainNode=[];
+var temp;
+var pickup = document.getElementById("sl_max_dur_sound").value;
+var gains=[];
+var sr = 22050;
+
 
 function mouseMove (e) {
   if(complete){return;}
@@ -376,15 +396,7 @@ function Animation_damped(){
   },inte);
 
   // --------------SOUND-------------------
-  let audioContext = new AudioContext();
-  var myBuffer=[];
-
-  var gainNode=[];
-  var temp;
-  var pickup = document.getElementById("sl_max_dur_sound").value;
-  var gains=[];
-  var sr = 22050;
-
+  
   //riempi il buffer
   var i;
   for(i=0; i<n_modes; i++){
@@ -392,7 +404,6 @@ function Animation_damped(){
     //let myBuffer=audioContext.createBuffer(1,441000,44100);
     //let Arraudio=myBuffer.getChannelData(0);
     let Arraudio = myBuffer[i].getChannelData(0); 
-    gainNode[i]= audioContext.createGain();
     //var exp= [];
     //
     for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
@@ -402,13 +413,37 @@ function Animation_damped(){
   }
   //start audio          
   for(i=0; i<n_modes; i++){
-    let src = audioContext.createBufferSource();
-    src.buffer = myBuffer[i];
-    //src.connect(gainNode[i]);
-    src.connect(audioContext.destination);
-    src.start();
+    srcs[i] = audioContext.createBufferSource();
+    srcs[i].buffer = myBuffer[i];
+    gainNode[i]= audioContext.createGain();
+    if(sound_button.classList == "sound_on"){
+      gainNode[i].gain.value = 1;
+    }else{
+      gainNode[i].gain.value = 0;
+    }
+    gainNode[i].connect(audioContext.destination);
+    srcs[i].connect(gainNode[i]);
+    srcs[i].start();
   }
+  
+  
+  sound_button.onclick = function(){
+    if (sound_button.classList == "sound_on"){
+      sound_button.innerHTML = "Sound: OFF";
+    }else{
+      sound_button.innerHTML = "Sound: ON";
+    }
+    sound_button.classList.toggle("sound_off");
 
+    for(i=0;i<n_modes;i++){
+      if(sound_button.classList == "sound_on"){
+        gainNode[i].gain.value = 1;
+      }else{
+        gainNode[i].gain.value = 0;
+      }
+    }
+  }
+  //-----------------------------------------
 
   //functions definition
   function goOn() {
@@ -460,6 +495,17 @@ animate.onclick = function() {if(startAnim){
   Animation_damped();
   }
 };
+
+sound_button.onclick = function(){
+  if (sound_button.classList == "sound_on"){
+    sound_button.innerHTML = "Sound: OFF";
+  }else{
+    sound_button.innerHTML = "Sound: ON";
+  }
+  sound_button.classList.toggle("sound_off");
+
+}
+
 
 //lazy functions
 function getCol(matrix, col){

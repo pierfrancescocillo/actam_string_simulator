@@ -6,6 +6,19 @@ var canvas_s = document.getElementById("spec_can");
 var ctx = canvas.getContext('2d');
 const height= can.height;
 const width= can.width;
+var bounds=canvas.getBoundingClientRect();
+//  let left   = bounds.left   + window.scrollX;
+ // let topp    = bounds.top    + window.scrollY;
+ // let right  = bounds.right  + window.scrollX;
+ // let bottom = bounds.bottom + window.scrollY;
+//var bounds_y=canvas.getBoundingClientRect().top;//-window.scrollY;      
+ctx.beginPath();
+ctx.moveTo(0, height/2);
+ctx.lineTo(width, height/2);          
+ctx.lineWidth=0.3;
+ctx.strokeStyle= "white"
+ctx.stroke();
+ctx.closePath();
 
 var ctx_s = canvas_s.getContext('2d');
 const spec_h= spec_can.height;
@@ -14,9 +27,22 @@ const spec_w= spec_can.width;
 //ctx.translate()
 canvas.addEventListener('mousedown', mouseDown, false);
 canvas.addEventListener('mousemove', mouseMove, false);
+canvas.addEventListener('mouseup', mouseUp);
+canvas.addEventListener('mouseout', mouseOut);
 
 function reset_func(){
-  document.getElementById("can").style.cursor = "url(../imgs/pencil.png) 0 25, default";
+  document.getElementById("can").style.cursor = "url(../imgs/cursor.cur) 0 0, default";
+
+  ctx.clearRect(0,0,width,height);
+  ctx_s.clearRect(0,0,spec_w,spec_h);
+  ctx.beginPath();
+  ctx.moveTo(0, height/2);
+  ctx.lineTo(width, height/2);          
+  ctx.lineWidth=0.3;
+  ctx.strokeStyle= "white"
+  ctx.stroke();
+  ctx.closePath();
+
   prevX = 0;
   currX = 0;
   prevY = 0;
@@ -34,10 +60,11 @@ function reset_func(){
   startDrawing=false;
   discrete= false;
   points=[];
-  ctx.clearRect(0,0,width,height)
-  ctx_s.clearRect(0,0,spec_h,spec_w)
-  canvas.addEventListener('mousedown', mouseDown, false);
-  canvas.addEventListener('mousemove', mouseMove, false);
+
+  canvas.addEventListener('mousedown', mouseDown);
+  canvas.addEventListener('mousemove', mouseMove);
+  canvas.addEventListener('mouseup', mouseUp);
+  canvas.addEventListener('mouseout', mouseOut);
 
   var audioContext = new AudioContext();
   var myBuffer=[];
@@ -66,6 +93,7 @@ var startAnim = false;
 var startDrawing=false;
 var discrete= false;
 var points=[];
+
 function KeepTrack(X,Y){
   if(complete){
     points.push([width, height/2]);
@@ -84,22 +112,42 @@ var gains=[];
 var sr = 22050;
 
 
+function mouseUp(e){
+  startDrawing=false;
+};
+
+function mouseOut(e){
+  startDrawing=false;
+}
+
 function mouseMove (e) {
-  if(complete){return;}
+  if(complete){
+    canvas.removeEventListener('mousemove', mouseMove);
+  };
+  //{return;}
+  
             move=true;
             prevX = currX;
             prevY = currY;
-            currX = e.layerX;
-            currY = e.layerY;
-   draw();
+            currX=((e.pageX-bounds.left)/(bounds.right-bounds.left)*width);
+            currY=((e.pageY-bounds.top)/(bounds.bottom-bounds.top)*height);
+ 
+  draw();
   if(startDrawing){
   KeepTrack(currX,currY);
         };
 };
   
 function mouseDown (e) {
-    if(complete) return;
-     startDrawing=true;
+    if(complete){
+      canvas.removeEventListener('mousedown', mouseDown);
+    }; //return;
+       startDrawing=true;
+      if(!empty){
+       currX=points[points.length-1][0];
+       currY=points[points.length-1][1];
+}   
+     //draw=true;
 };
 
 function draw() {
@@ -129,9 +177,10 @@ function draw() {
       ctx.moveTo(prevX, prevY);
       ctx.lineTo(currX, currY);
     }
-    ctx.lineWidth=2;
+    ctx.lineWidth=1;
     ctx.lineCap="round";
     ctx.lineJoin="round";
+    ctx.strokeStyle='rgba(255,255,255,0.5)';
     ctx.stroke();
     ctx.closePath();
   }
@@ -139,24 +188,31 @@ function draw() {
 }
 
 function DrawPoints(NewPoints){
-  ctx.clearRect(0,0,width,height)
+  ctx.clearRect(0,0,width,height);
   ctx.beginPath();
+  ctx.moveTo(0, height/2);
+  ctx.lineTo(width, height/2);
+  ctx.lineWidth=0.3;
+  ctx.strokeStyle="white";
+  ctx.stroke();
+  ctx.closePath();
   var i;
+  ctx.beginPath();
+  ctx.fillStyle= 'rgba(255,255,255,0.5)';
   for(i=0; i<NewPoints.length; i++){
   ctx.fillRect(NewPoints[i][0], NewPoints[i][1], 1, 1);
-  }  
-  ctx.strokeStyle= "red";
-  ctx.stroke();
+  };
+  
   ctx.closePath();
 };
 
 function DrawLines(NewPoints){
   ctx_s.clearRect(0,0,spec_h,spec_w)
   ctx_s.beginPath();
+  ctx_s.fillStyle= "#2772bf";
   for(i=0; i<NewPoints.length; i++){
-  ctx_s.fillRect(NewPoints[i][0], NewPoints[i][1], 3, spec_h - NewPoints[i][1])
-  }
-  ctx_s.strokeStyle= "red";
+  ctx_s.fillRect(NewPoints[i][0], NewPoints[i][1], 3, spec_h - NewPoints[i][1]);
+  };
   ctx_s.stroke();
   ctx_s.closePath();
 };
@@ -429,6 +485,7 @@ function Animation_damped(){
   // --------------SOUND-------------------
   
   //riempi il buffer
+  temp=1/sr;
   var i;
   for(i=0; i<n_modes; i++){
     myBuffer[i] = audioContext.createBuffer(1, sr*dur, sr);
@@ -437,15 +494,13 @@ function Animation_damped(){
     let Arraudio = myBuffer[i].getChannelData(0); 
     //var exp= [];
     //
-
+    
     if(i<i_bar){
-      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
-        temp=1/sr;
-        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sinh(omega[i]*temp*sampleNumber) + b_n[i]*Math.cosh(omega[i]*temp*sampleNumber));
+      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {     
+        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
       }
     }else{
       for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
-        temp=1/sr;
         Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
       }
     }

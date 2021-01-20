@@ -75,6 +75,12 @@ function reset_func(){
   var sr = 22050;
 }
 
+//time slider useful variables
+var bool_speed = 1;
+var speeds = [0.001,0.01,0.1,1];
+
+notes = ["A","A#","B","C","C#","D","D#","E","F","F#","G","G#"];
+
 //Canvas variables
 var prevX = 0;
 var currX = 0;
@@ -243,6 +249,7 @@ document.getElementById("sl_T").oninput = function(){
 document.getElementById("L_value").innerHTML = document.getElementById("sl_L").value;
 document.getElementById("sl_L").oninput = function(){
   document.getElementById("L_value").innerHTML = this.value;
+  document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * this.value / (119) * 100) * 100)/100;
 }
 
 document.getElementById("m_value").innerHTML = document.getElementById("sl_m").value;
@@ -259,106 +266,17 @@ document.getElementById("max_dur_sound_value").innerHTML = document.getElementBy
 document.getElementById("sl_max_dur_sound").oninput = function(){
   document.getElementById("max_dur_sound_value").innerHTML = this.value;
 }
-//--------------------------------------------------------------------
 
-/*  ------------ANIMATION CODE--------------- 
-function Animation(){
-
-  const n_points = NewPoints.length;
-  //console.clear();
-  //console.log(NewPoints);
-
-  var Xcord = getCol(NewPoints,0);
-  var changedModel = math.zeros(n_points,2)._data;
-  //console.log(changedModel);
-  var i;
-  for(i=0;i<n_points;i++){
-    changedModel[i][0] = Xcord[i];
-  }
-
-  //MODEL
-  var model = Array(n_points).fill(0);
-
-  //VIEW
-  function render(){
-    var i;
-    for(i=0;i<model.length;i++){
-      changedModel[i][1] = height/2 - model[i];
-    }
-  
-    DrawPoints(changedModel);
-  }
-
-
-
-
-  const n_modes = n_points - 2;
-  var omega = Array(n_modes).fill(0);
-  var Phi = math.zeros(n_points,n_modes)._data;
-
-  //compute natural frequencies
-    var i;
-  for(i=0;i<n_modes;i++){
-    omega[i] = (i+1)*Math.PI*Math.sqrt(T/m) / L;
-  }
-  //compute mode shapes
-    var i,j;
-  for(j=0;j<n_points;j++){
-    for(i=0;i<n_modes;i++){
-      Phi = math.subset(Phi, math.index(j,i), Math.sin((i+1)*Math.PI* ((j)*L/(n_points-1)) / L));
-    }
-  }
-
-  var w = getCol(NewPoints,1);
-  //var pick_point = n_points/3;
-  /*
-  for(i=0;i<n_points;i++){
-    if (i<pick_point){
-        w[i] = i;
-    } else {
-        w[i] = pick_point * (i)/ (pick_point - n_points) - pick_point*n_points / (pick_point - n_points);
-    }
-  }
-  
-  Phi.pop(); Phi.shift();
-
-  w.pop(); w.shift(); math.flatten(w);
-
-  //compute alpha and beta parameters
-
-  var b_n = math.flatten(math.multiply(math.inv(Phi),math.transpose(w)));
-  var a_n = Array(n_modes).fill(0);
-
-
-
-
-
-  var cos = Array(n_modes).fill(0);
-
-  var time=0;
-  setInterval(goOn,inte);
-
-  //functions definition
-  function goOn() {
-    time = time + inte/100*Math.pow(10,-3);
-    var i;
-    for(i=0;i<n_modes;i++){
-    cos[i] = a_n[i]*Math.sin(omega[i]*time) + b_n[i]*Math.cos(omega[i]*time);
-    }
-    var i;
-    for(i=0;i<n_points;i++){
-      if(i!=0 && i!=n_points-1){
-        model[i] = math.dot(      math.flatten(math.subset(Phi,math.index(i-1,math.range(0,n_modes))))
-        ,
-        cos
-        );
-      }
-    }
-    render(); 
-  }
-  
+document.getElementById("anim_speed_value").innerHTML = speeds[document.getElementById("sl_anim_speed").value];
+document.getElementById("sl_anim_speed").oninput = function(){
+  document.getElementById("anim_speed_value").innerHTML = speeds[this.value];
 }
-*/
+
+document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * document.getElementById("sl_L").value / (119) * 100) * 100)/100;
+document.getElementById("pick_up").oninput = function(){
+  document.getElementById("pick_up_value").innerHTML = Math.round((this.value * document.getElementById("sl_L").value / (119) * 100) * 100)/100;
+}
+//--------------------------------------------------------------------
 
 //---------ANIMATION DAMPED CODE--------------------
 function Animation_damped(){
@@ -378,7 +296,8 @@ function Animation_damped(){
   console.log("i_bar: " + String(i_bar))
   const alpha = nu/(2*m);
   const dur = document.getElementById("sl_max_dur_sound").value;
-  var pickup = document.getElementById("sl_max_dur_sound").value;
+  var pickup = document.getElementById("pick_up").value;
+  var speed_i = document.getElementById("sl_anim_speed").value;
   //--------------------------------------------------------------------------------
 
   const n_points = NewPoints.length;
@@ -405,7 +324,7 @@ function Animation_damped(){
   function render(){
     var i;
     for(i=0;i<model.length;i++){
-      changedModel[i][1] = 75 - model[i];
+      changedModel[i][1] = height/2 - model[i];
     }
   
     DrawPoints(changedModel);
@@ -428,6 +347,18 @@ function Animation_damped(){
   for(i=0;i<n_modes;i++){
     omega[i] = Math.sqrt(Math.abs(math.pow(nu,2) - 4*m*T*math.pow((i+1)*Math.PI / L,2))) / (2 * m)
   }
+
+  var N = Math.round(12 * Math.log(omega[0]/(2*Math.PI)/440) / Math.log(2));
+  while(N<0 || N>11){
+    if(N<0){
+      N=N+12;
+    }else{
+      N=N-12;
+    }
+  }
+  document.getElementById("show_note").innerHTML = notes[N];
+
+
   //compute mode shapes
   console.log("computing modeshapes");
   var i,j;
@@ -437,17 +368,10 @@ function Animation_damped(){
     }
   }
 
+  
+
   var w = getCol(NewPoints,1);
-  //var pick_point = n_points/3;
-  /*
-  for(i=0;i<n_points;i++){
-    if (i<pick_point){
-        w[i] = i;
-    } else {
-        w[i] = pick_point * (i)/ (pick_point - n_points) - pick_point*n_points / (pick_point - n_points);
-    }
-  }
-  */
+ 
   Phi.pop(); Phi.shift();
 
   w.pop(); w.shift(); math.flatten(w);
@@ -495,15 +419,16 @@ function Animation_damped(){
     //var exp= [];
     //
     
-    if(i<i_bar){
+    if(pickup!=0 && pickup!=n_points-1){
       for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {     
-        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+        Arraudio[sampleNumber] = Phi[pickup-1][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
       }
     }else{
-      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {
-        Arraudio[sampleNumber] = Phi[pickup][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
+      for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {     
+        Arraudio[sampleNumber] = 0;
       }
     }
+ 
   }
   //start audio          
   for(i=0; i<n_modes; i++){
@@ -542,7 +467,7 @@ function Animation_damped(){
   //functions definition
   function goOn() {
     console.log("increasing time");
-    time = time + inte*Math.pow(10,-3);
+    time = time + inte*Math.pow(10,-3) * speeds[speed_i];
     console.log("computing cos and cosh arrays");
     var i;
     for(i=0;i<n_modes;i++){
@@ -550,17 +475,23 @@ function Animation_damped(){
       cosh[i] = a_n[i]*Math.sinh(omega[i]*time) + b_n[i]*Math.cosh(omega[i]*time);
     }
     //computing norm. constant
-    var test = []
-    for(i=0;i<n_modes;i++){
-      test[i] = b_n[i] * Phi[pickup][i] / Math.cos(Math.atan(-a_n[i]/b_n[i]))
-    }
-    var norm = Math.max.apply(Math, test);
+    if(pickup!=0 && pickup!=n_points-1){
+      var test = []
+      for(i=0;i<n_modes;i++){
+        test[i] = b_n[i] * Phi[pickup-1][i] / Math.cos(Math.atan(-a_n[i]/b_n[i]))
+      }
+      var norm = Math.max.apply(Math, test);
 
-    for(i=0;i<n_modes;i++){
-      A_n[i] = b_n[i] * Phi[pickup][i] * Math.exp(-alpha*time) / Math.cos(Math.atan(-a_n[i]/b_n[i])) * (spec_h-10)/norm
-      A_nh[i] = b_n[i] * Phi[pickup][i] * Math.exp(-alpha*time) / Math.cosh(Math.atanh(a_n[i]/b_n[i])) * (spec_h-10)/norm
+      for(i=0;i<n_modes;i++){
+        A_n[i] = b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cos(Math.atan(-a_n[i]/b_n[i])) * (spec_h-10)/norm
+        A_nh[i] = b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cosh(Math.atanh(a_n[i]/b_n[i])) * (spec_h-10)/norm
+      }
+    }else{
+      for(i=0;i<n_modes;i++){
+        A_n[i] = 0;
+        A_nh[i] = 0;
+      }
     }
-
 
     console.log("updating the model");
     var i;
@@ -598,6 +529,10 @@ function Animation_damped(){
     reset.onclick = function(){
       bool1 = true;
       model = Array(n_points).fill(0);
+      document.getElementById("show_note").innerHTML = "";
+      for(i=0; i<n_modes; i++){
+        srcs[i].stop();
+      };
       reset_func();
     }
   }
@@ -619,6 +554,12 @@ sound_button.onclick = function(){
 
 }
 
+sl_anim_speed.onclick = function(){
+  if(bool_speed){
+    alert("Pay attenction!");
+    bool_speed = 0;
+  }
+}
 
 //lazy functions
 function getCol(matrix, col){

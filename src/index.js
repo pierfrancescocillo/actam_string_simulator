@@ -20,6 +20,8 @@ ctx.strokeStyle= "white"
 ctx.stroke();
 ctx.closePath();
 
+N_points = 120;
+
 var ctx_s = canvas_s.getContext('2d');
 const spec_h= spec_can.height;
 const spec_w= spec_can.width;
@@ -233,7 +235,7 @@ function ChangeYcord(NewPoints){
 
 function Discretize(){
   var interpolateLineRange = require( 'line-interpolate-points' );
-  NewPoints = interpolateLineRange(points, 120)
+  NewPoints = interpolateLineRange(points, N_points)
   startAnim = true;
   DrawPoints(NewPoints);
   ChangeYcord(NewPoints);
@@ -249,7 +251,7 @@ document.getElementById("sl_T").oninput = function(){
 document.getElementById("L_value").innerHTML = document.getElementById("sl_L").value;
 document.getElementById("sl_L").oninput = function(){
   document.getElementById("L_value").innerHTML = this.value;
-  document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * this.value / (119) * 100) * 100)/100;
+  document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * this.value / (N_points-1) * 100) * 100)/100;
 }
 
 document.getElementById("m_value").innerHTML = document.getElementById("sl_m").value;
@@ -272,9 +274,11 @@ document.getElementById("sl_anim_speed").oninput = function(){
   document.getElementById("anim_speed_value").innerHTML = speeds[this.value];
 }
 
-document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * document.getElementById("sl_L").value / (119) * 100) * 100)/100;
+document.getElementById("pick_up").max = N_points-1;  
+document.getElementById("pick_up").value = Math.round((N_points-1)/2); 
+document.getElementById("pick_up_value").innerHTML = Math.round((document.getElementById("pick_up").value * document.getElementById("sl_L").value / (N_points-1) * 100) * 100)/100;
 document.getElementById("pick_up").oninput = function(){
-  document.getElementById("pick_up_value").innerHTML = Math.round((this.value * document.getElementById("sl_L").value / (119) * 100) * 100)/100;
+  document.getElementById("pick_up_value").innerHTML = Math.round((this.value * document.getElementById("sl_L").value / (N_points-1) * 100) * 100)/100;
 }
 //--------------------------------------------------------------------
 
@@ -556,7 +560,7 @@ sound_button.onclick = function(){
 
 sl_anim_speed.onclick = function(){
   if(bool_speed){
-    alert("Pay attenction!");
+    alert("Be careful! \nIf you slow down the speed of the animation the audio reproduction will not be affected. \nThe animation and the sound will not be simultaneous");
     bool_speed = 0;
   }
 }

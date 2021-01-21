@@ -214,6 +214,35 @@ function DrawPoints(NewPoints){
   ctx.closePath();
 };
 
+
+/*function DrawPoints(NewPoints){
+  ctx.clearRect(0,0,width,height);
+  ctx.beginPath();
+  ctx.moveTo(0, height/2);
+  ctx.lineTo(width, height/2);
+  ctx.lineWidth=0.3;
+  ctx.strokeStyle="white";
+  ctx.stroke();
+  ctx.closePath();
+  var i;
+  ctx.beginPath();
+  //ctx.fillStyle= 'rgba(255,255,255,0.5)';
+  ctx.strokeStyle= 'rgba(255,255,255,0.5)';
+  for(i=1; i<NewPoints.length; i++){
+    ctx.moveTo(NewPoints[i-1][0], NewPoints[i-1][1]);
+    ctx.lineTo(NewPoints[i][0], NewPoints[i][1]);
+    if(i<NewPoints.length/2){ 
+      ctx.lineWidth=0.01;
+    }else{
+      ctx.lineWidth=0.02;
+    }
+    
+    ctx.stroke();
+  };
+  
+  ctx.closePath();
+};*/
+
 function DrawLines(NewPoints){
   ctx_s.clearRect(0,0,spec_h,spec_w)
   ctx_s.beginPath();

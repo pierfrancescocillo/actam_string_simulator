@@ -21,7 +21,11 @@
 
 ### Spectrum analyzer and Note Detector
 
+![](screenshots/spectrum.png)
+
 ### Pick-up
+
+![](screenshots/pickup.png)
 
 ## Vibroacoustical analysis
 

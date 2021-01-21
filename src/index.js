@@ -1,4 +1,5 @@
 console.clear();
+test_bool = 0;
 
 var canvas = document.getElementById("can");
 var canvas_s = document.getElementById("spec_can");
@@ -248,7 +249,7 @@ function DrawLines(NewPoints){
   ctx_s.beginPath();
   ctx_s.fillStyle= "#2772bf";
   for(i=0; i<NewPoints.length; i++){
-  ctx_s.fillRect(NewPoints[i][0], NewPoints[i][1], 3, spec_h - NewPoints[i][1]);
+  ctx_s.fillRect(NewPoints[i][0]+1, NewPoints[i][1], 3, spec_h - NewPoints[i][1]);
   };
   ctx_s.stroke();
   ctx_s.closePath();
@@ -334,24 +335,25 @@ function Animation_damped(){
   //--------------------------------------------------------------------------------
 
   const n_points = NewPoints.length;
-  //console.clear();
-  //console.log(NewPoints);
+  const n_modes = n_points - 2;
+  var omega = Array(n_modes).fill(0);
+  var Phi = math.zeros(n_points,n_modes)._data;
 
   var Xcord = getCol(NewPoints,0);
   var changedModel = math.zeros(n_points,2)._data;
-  var Adapted = math.zeros(n_points,2)._data;
+  var Adapted = math.zeros(n_modes,2)._data;
   //console.log(changedModel);
   var i;
   for(i=0;i<n_points;i++){
     changedModel[i][0] = Xcord[i];
   }
-  for(i=0;i<n_points;i++){
+  for(i=0;i<n_modes;i++){
     Adapted[i][0] = Xcord[i] * 2;
   }
 
   //MODEL
   var model = Array(n_points).fill(0);
-  var model_spec = Array(n_points).fill(0);
+  var model_spec = Array(n_modes).fill(0);
 
   //VIEW
   function render(){
@@ -364,15 +366,11 @@ function Animation_damped(){
   }
 
   function render_spec(){
-    for(i=0;i<n_points;i++){
+    for(i=0;i<n_modes;i++){
       Adapted[i][1] = spec_h - model_spec[i];
     }
     DrawLines(Adapted);
   }
-
-  const n_modes = n_points - 2;
-  var omega = Array(n_modes).fill(0);
-  var Phi = math.zeros(n_points,n_modes)._data;
 
   //compute natural frequencies
   console.log("computing natural frequencies");
@@ -497,6 +495,7 @@ function Animation_damped(){
   }
   //-----------------------------------------
 
+  
   //functions definition
   function goOn() {
     console.log("increasing time");
@@ -511,13 +510,17 @@ function Animation_damped(){
     if(pickup!=0 && pickup!=n_points-1){
       var test = []
       for(i=0;i<n_modes;i++){
-        test[i] = b_n[i] * Phi[pickup-1][i] / Math.cos(Math.atan(-a_n[i]/b_n[i]))
+          if(i<i_bar){
+            test[i] = Math.abs(b_n[i] * Phi[pickup-1][i] / Math.cosh(Math.atanh(-a_n[i]/b_n[i])));
+          }else{
+            test[i] = Math.abs(b_n[i] * Phi[pickup-1][i] / Math.cos(Math.atan(-a_n[i]/b_n[i])));
+          }
       }
       var norm = Math.max.apply(Math, test);
 
       for(i=0;i<n_modes;i++){
-        A_n[i] = b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cos(Math.atan(-a_n[i]/b_n[i])) * (spec_h-10)/norm
-        A_nh[i] = b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cosh(Math.atanh(a_n[i]/b_n[i])) * (spec_h-10)/norm
+        A_n[i] = Math.abs(b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cos(Math.atan(-a_n[i]/b_n[i])) * (spec_h-10)/norm);
+        A_nh[i] = Math.abs(b_n[i] * Phi[pickup-1][i] * Math.exp(-alpha*time) / Math.cosh(Math.atanh(a_n[i]/b_n[i])) * (spec_h-10)/norm);
       }
     }else{
       for(i=0;i<n_modes;i++){
@@ -542,21 +545,21 @@ function Animation_damped(){
           cos.slice(Math.floor(i_bar),n_modes)
           );
           if(i<i_bar){
-            model_spec[i] = A_nh[i];
+            model_spec[i-1] = A_nh[i-1];
           }else{
-            model_spec[i] = A_n[i];
+            model_spec[i-1] = A_n[i-1];
           }
         }else{
           model[i] = Math.exp(-alpha*time) * math.dot(math.flatten(math.subset(Phi,math.index(i-1,math.range(0,n_modes))))
           ,
           cos
           );
-          model_spec[i] = A_n[i];
+          model_spec[i-1] = A_n[i-1];
         }
         
       }
     }
-   
+
     render(); 
     render_spec();
     reset.onclick = function(){

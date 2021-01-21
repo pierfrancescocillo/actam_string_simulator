@@ -3,13 +3,21 @@
 
 ## Introduction
 
+![](screenshots/overview.jpeg)
+
 ## User Interface
 
 ### Blackboard
 
+![](screenshots/drawing.png)
+
+![](screenshots/discretized.png)
+
 ![](screenshots/animated_string.gif)
 
 ### Parameters
+
+![](screenshots/parameters.png)
 
 ### Spectrum analyzer and Note Detector
 

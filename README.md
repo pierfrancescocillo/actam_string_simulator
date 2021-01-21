@@ -7,7 +7,7 @@
 
 ### Blackboard
 
-![](animated_string.gif)
+![](screenshots/animated_string.gif)
 
 ### Parameters
 

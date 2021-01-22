@@ -56,15 +56,17 @@ Furthermore, on the white square spot, is visualized the note which comes closes
 
 ## Vibroacoustical analysis
 
-We started considering the string's equation, subjected to damping
+We start considering the string's equation, subjected to damping
 
 <img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
 
+where μ is the linear density of the string, T is the tension applied to the string, and β is the damping coefficient.
+
 We assume a standing wave solution of the form w(x,t) = Φ(x)G(t)
 
-From the boundary conditions we found out that
+From the boundary conditions we find out that
 
-<img src="https://render.githubusercontent.com/render/math?math=\large \Phi = sin(\frac{i \pi x}{L})">
+<img src="https://render.githubusercontent.com/render/math?math=\large \Phi (x) = sin(\frac{i \pi x}{L})">
 
 With i=1,2,...,N    where N is the number of considered modes
 

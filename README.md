@@ -11,11 +11,11 @@ As a project for the Advanced Coding Tools and Methodologies course we decided t
 
 ![](screenshots/drawing.png)
 
-The first think the user wants to do, is to draw down on the blackboard the initial shape of the string before it begins to vibrate. Of course, the vertical position of the ends of the string has to be null, so wherever the user starts and stops to draw, the inital and final vertical position of the drawing are forced to be null. As a reference for the rest position of the string, there is an horizontal line which guides the user.
+The first thing the user wants to do, is to draw down on the blackboard the initial shape of the string before it begins to vibrate. Of course, the vertical position of the ends of the string has to be null, so wherever the user starts and stops to draw, the inital and final vertical position of the drawing are forced to be null. This means that if the user starts drawing, for example, in the middle of the blackboard, automatically a straight line will appear from the first point (in position x=0, y=height/2) to that point drawn by the user, and a similar mechanism it's set also for the last point, in order to maintain always these two positions fixed. Our application tracks the mouse coordinates that the user encounter while he's drawing. As a reference for the rest position of the string, there is an horizontal line which guides the user. 
 
 ![](screenshots/discretized.png)
 
-After the drawing is concluded, the string shape is discretized, so it can be treated as a set of masses. Each one of the masses' vibrations is, then, the linear combination of it's proper frequencies and it's modeshapes.
+After the drawing is concluded, the string shape is discretized, so it can be treated as a set of masses. Each one of the masses' vibrations is, then, the linear combination of it's proper frequencies and it's modeshapes. Due to some inaccuracies of mouse tracking, for discretization we also use a line-interpolation library: every string that the user draws is always discretized with 120 points.
 
 We want to focus your attenction on one simple fact: each mass composing the string is totally unrelated to the others. The final vibration of the string as a whole body is a simple consequence of the applyed vibroacoustical theory.
 
@@ -42,7 +42,7 @@ Before to click the **Animate** button, the user can set it's own desired extern
 
 ![](screenshots/pickup.png)
 
-The sound buffer, in order to be played, needs a source to take it's data from. For this reason, we decided to emulate the sound reproduction taking cue form the mechanism of sound reproduction of an electric guitar. Therefore, is possible for the user to set a position on the horizontal axis, using the slider right below the lackboard, so the reproducing sound will be the one radiated from the vibrating mass in the position corresponding to the chosen one, simulating the pickup role on the electric guitar. 
+The sound buffer, in order to be played, needs a source to take it's data from. For this reason, we decided to emulate the sound reproduction taking cue form the mechanism of sound reproduction of an electric guitar. Therefore, is possible for the user to set a position on the horizontal axis, using the slider right below the lackboard, so the reproducing sound will be the one radiated from the vibrating mass in the position corresponding to the chosen one, simulating the pickup role on the electric guitar. For the sound to be accurate, we create an audio buffer for every mode, and our application plays all of them together.
 
 ### Spectrum analyzer and Note Detector
 

@@ -72,7 +72,7 @@ With i=1,2,...,N    where N is the number of considered modes
 
 * If <img src="https://render.githubusercontent.com/render/math?math=\beta^2 - 4\mu T (i \pi / L)^2 > 0">, then 
 
-    <img src="https://render.githubusercontent.com/render/math?math=\Large G_i (t) = e^{-\alpha t}(a_i cosh(\omega_i t) %2B b_i sinh(\omega_i t))">
+    <img src="https://render.githubusercontent.com/render/math?math=\large G_i (t) = e^{-\alpha t}(a_i cosh(\omega_i t) %2B b_i sinh(\omega_i t))">
 * If <img src="https://render.githubusercontent.com/render/math?math=\beta^2 - 4\mu T (i \pi / L)^2 < 0">, then 
 
     <img src="https://render.githubusercontent.com/render/math?math=\large G_i (t) = e^{-\alpha t}(a_i cos(\omega_i t) %2B b_i sin(\omega_i t))">
@@ -86,6 +86,6 @@ Therfore, it's possible to get the solution of the equation in the form
 The parameters a<sub>n</sub> and b<sub>n</sub> are determined by imposing the initial conditions:
 
 <img src="https://render.githubusercontent.com/render/math?math=\large w(x,0) = w_0 (x)">
-<img src="https://render.githubusercontent.com/render/math?math=\large \dot{w(x,0)} = \dot{w_0} (x)">
+<img src="https://render.githubusercontent.com/render/math?math=\large \dot{w} (x,0) = \dot{w_0} (x)">
 
 

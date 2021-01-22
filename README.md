@@ -56,3 +56,5 @@ Furthermore, on the white square spot, is visualized the note which comes closes
 
 ## Vibroacoustical analysis
 
+<img src="https://render.githubusercontent.com/render/math?math=\LARGE\mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
+

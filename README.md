@@ -83,7 +83,7 @@ Therfore, it's possible to get the solution of the equation in the form
 
 <img src="https://render.githubusercontent.com/render/math?math=\LARGE w(x,t) = e^{-\alpha t} \sum_{1 \le i < \frac{\beta L}{2 \pi \sqrt{T \mu}}} sin(\frac{i \pi x}{L})(a_i cosh(\omega_i t) %2B b_i sinh(\omega_i t)) %2B e^{-\alpha t} \sum_{i > \frac{\beta L}{2 \pi \sqrt{T \mu}}} sin(\frac{i \pi x}{L})(a_i cos(\omega_i t) %2B b_i sin(\omega_i t))">
 
-The parameters a<sub>n</sub> and b<sub>n</sub> are determined by imposing the initial conditions:
+The parameters a<sub>i</sub> and b<sub>i</sub> are determined by imposing the initial conditions:
 
 <img src="https://render.githubusercontent.com/render/math?math=\large w(x,0) = w_0 (x)">
 <img src="https://render.githubusercontent.com/render/math?math=\large \dot{w} (x,0) = \dot{w_0} (x)">

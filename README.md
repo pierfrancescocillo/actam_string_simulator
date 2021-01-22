@@ -50,7 +50,7 @@ The sound buffer, in order to be played, needs an external source to take it's d
 
 In order for the user to decide if he wants the sound to be played, there is a **Sound: ON/Sound: OFF** switch, which gives the user this choice.
 
-When the animation of the vibration starts, it's frequency spectrum is immediately visualized on the Spectrum analyzer screen. More precisely, the analyzed spectrum is the one of the sound radiated by the mass corresponding to the pickup position.
+When the animation of the vibration starts, it's frequency spectrum is immediately visualized on the Spectrum analyzer screen. More precisely, the analyzed spectrum is the one of the sound radiated by the mass corresponding to the pickup position. For the sound to be accurate, we create an audio buffer for every mode, and our application plays all of them together.
 
 Furthermore, on the white square is visualized the note which comes closest to the palying sound pitch, found using equal temperament. 
 

@@ -38,15 +38,21 @@ Before to click the **Animate** button, the user can set it's own desired extern
 * **Maximum duration of the sound**: The sound reproduction starts with the vibration, so this parameter controls the maximum duration, in seconds, of the sound reproduced. 
 * **Animation speed**: Allows to control the velocity of the vibration, if the user wants to see it in slow motion. Of course, if the Animation speed is not set to 1x, the sound reproduction will not be simoultaneous to the vibration.
 
+### Pick-up
+
+![](screenshots/pickup.png)
+
+The sound buffer, in order to be played, needs a source to take it's data from. For this reason, we decided to emulate the sound reproduction taking cue form the mechanism of sound reproduction of an electric guitar. Therefore, is possible for the user to set a position on the horizontal axis, using the slider right below the lackboard, so the reproducing sound will be the one radiated from the vibrating mass in the position corresponding to the chosen one, simulating the pickup role on the electric guitar. 
+
 ### Spectrum analyzer and Note Detector
 
 ![](screenshots/spectrum.png)
 
+In order to the user to decide if he/she wants the sound to be played, ther is a **Sound: ON/Sound: OFF** switch, which gives the user this choice.
 
+When the animation of the vibration starts, it's frequency spectrum is immediately visualized on the Spectrum analyzer screen. More precisely, the analyzed spectrum is the one of the sound radiated by the mass corresponding to the pickup position.
 
-### Pick-up
-
-![](screenshots/pickup.png)
+Furthermore, on the white square spot, is visualized the note which comes closest to the palying sound pitch, found using the equal temperament. 
 
 ## Vibroacoustical analysis
 

@@ -58,13 +58,13 @@ Furthermore, on the white square spot, is visualized the note which comes closes
 
 We started considering the string's equation, subjected to damping
 
-<img src="https://render.githubusercontent.com/render/math?math=\LARGE\mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
+<img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
 
 We assume a standing wave solution of the form w(x,t) = Φ(x)G(t)
 
 From the boundary conditions we found out that
 
-<img src="https://render.githubusercontent.com/render/math?math=\Large \Phi = sin(\frac{i \pi x}{L})">
+<img src="https://render.githubusercontent.com/render/math?math=\large \Phi = sin(\frac{i \pi x}{L})">
 
 With i=1,2,...,N    where N is the number of considered modes
 
@@ -73,7 +73,7 @@ With i=1,2,...,N    where N is the number of considered modes
     <img src="https://render.githubusercontent.com/render/math?math=\Large G_i (t) = e^{-\alpha t}(a_i cosh(\omega_i t) %2B b_i sinh(\omega_i t))">
 * If <img src="https://render.githubusercontent.com/render/math?math=\beta^2 - 4\mu T (i \pi / L)^2 < 0">, then 
 
-    <img src="https://render.githubusercontent.com/render/math?math=\Large G_i (t) = e^{-\alpha t}(a_i cos(\omega_i t) %2B b_i sin(\omega_i t))">
+    <img src="https://render.githubusercontent.com/render/math?math=\large G_i (t) = e^{-\alpha t}(a_i cos(\omega_i t) %2B b_i sin(\omega_i t))">
     
 with <img src="https://render.githubusercontent.com/render/math?math=\alpha = \frac{\beta}{2\mu}"> and <img src="https://render.githubusercontent.com/render/math?math=\omega_i = \frac{\sqrt{|\beta^2 - 4\mu T (i \pi / L)^2|}}{2\mu}">
 

@@ -34,7 +34,7 @@ canvas.addEventListener('mouseup', mouseUp);
 canvas.addEventListener('mouseout', mouseOut);
 
 function reset_func(){
-  document.getElementById("can").style.cursor = "url(../imgs/cursor.cur) 0 0, default";
+  document.getElementById("can").style.cursor = "url(imgs/cursor.cur) 0 0, default";
 
   ctx.clearRect(0,0,width,height);
   ctx_s.clearRect(0,0,spec_w,spec_h);

@@ -88,3 +88,9 @@ In order for the user to decide if he wants the sound to be played, there is a *
 When the animation of the vibration starts, it's frequency spectrum is immediately visualized on the Spectrum analyzer screen. More precisely, the analyzed spectrum is the one of the sound radiated by the mass corresponding to the pickup position. For the sound to be accurate, we created an audio buffer for every mode, which are played toghether.
 
 Furthermore, on the white square is visualized the note which comes closest to the palying sound pitch, found using equal temperament. 
+
+## Try it!
+
+It is possible to try our simulator [here](http://string-simulator.surge.sh/) thanks to the platform Surge.
+
+>Surge: Static web publishing for Front-End Developers. Simple, single-command web publishing. Publish HTML, CSS, and JS for free, without leaving the command line.

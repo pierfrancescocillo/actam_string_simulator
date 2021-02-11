@@ -17,7 +17,7 @@ We assume a standing wave solution of the form w(x,t) = Φ(x)G(t)
 
 From the boundary conditions we find out that
 
-<img src="https://render.githubusercontent.com/render/math?math=\large \Phi (x) = sin(\frac{i \pi x}{L})">
+<img src="https://render.githubusercontent.com/render/math?math=\large \Phi_i (x) = sin(\frac{i \pi x}{L})">
 
 With i=1,2,...,N &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; where N is the number of considered modes. The coefficient L represents the length of the string.
 

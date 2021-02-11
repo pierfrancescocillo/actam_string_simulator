@@ -9,8 +9,8 @@
         <link rel="stylesheet" type="text/css" href="src/index.css" />
     </head>
     <body>
-
-        <div id="big_cont">
+        <div class="string"></div>
+        <div class="point"></div>
             <h1> STRING SIMULATOR</h1>
          
             <div id="buttons_cont">
@@ -30,11 +30,14 @@
                 </div>
            
                 <div class="single_slider"><input type="range" min="0" step="1" class="slider" id="pick_up"><p>Pick-up position: <span id="pick_up_value"></span> cm</p></div>
-                <canvas id="spec_can"></canvas>
-            </div>
+
+            <div id="Write_cont">
             <div id="sound_button" class="sound_on">Sound: ON</div>
             <div id="show_note"></div>
-
+            <canvas id="spec_can"></canvas></div>
+            <div class="leg1"></div>
+            <div class="leg2"></div>
+            
         </div>
         
         <script src="src/index.js"></script>   

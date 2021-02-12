@@ -9,7 +9,7 @@ As a project for the Advanced Coding Tools and Methodologies course we decided t
 
 We start considering the string's equation, subject to damping:
 
-<img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
+<img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial t^2}(x,t)=T\frac{\partial^2 w}{\partial x^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
 
 where μ is the linear density of the string, T is the tension applied to the string, and β is the damping coefficient.
 

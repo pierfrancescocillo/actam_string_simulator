@@ -94,3 +94,8 @@ Furthermore, on the white square is visualized the note which comes closest to t
 It is possible to try our simulator [here](http://string-simulator.surge.sh/) thanks to the platform Surge.
 
 >Surge: Static web publishing for Front-End Developers. Simple, single-command web publishing. Publish HTML, CSS, and JS for free, without leaving the command line.
+
+## Video Demo
+
+It is possible to see a demonstrative video at the following link: 
+https://youtu.be/TsT8PIqbbC4

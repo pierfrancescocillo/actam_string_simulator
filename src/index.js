@@ -27,7 +27,6 @@ var ctx_s = canvas_s.getContext('2d');
 const spec_h= spec_can.height;
 const spec_w= spec_can.width;
 
-//ctx.translate()
 canvas.addEventListener('mousedown', mouseDown, false);
 canvas.addEventListener('mousemove', mouseMove, false);
 canvas.addEventListener('mouseup', mouseUp);
@@ -58,8 +57,6 @@ function reset_func(){
   complete=false;
   NewPoints=[];
   startAnim = false;
-  //var pointsX= [];
-  //var pointsY=[];
   startDrawing=false;
   discrete= false;
   points=[];
@@ -97,8 +94,6 @@ var empty=true;
 var complete=false;
 var NewPoints=[];
 var startAnim = false;
-//var pointsX= [];
-//var pointsY=[];
 var startDrawing=false;
 var discrete= false;
 var points=[];
@@ -107,8 +102,9 @@ function KeepTrack(X,Y){
   if(complete){
     points.push([width, height/2]);
     Discretize();
-    return;}
- points.push([X,Y]);
+    return;
+  }
+  points.push([X,Y]);
 };
 
 //Sound Variables
@@ -130,53 +126,57 @@ function mouseOut(e){
 }
 
 function mouseMove (e) {
-  if(complete){
+  if((complete)||(currX>width)){
     canvas.removeEventListener('mousemove', mouseMove);
+    return;
   };
-  //{return;}
-  
-            move=true;
-            prevX = currX;
-            prevY = currY;
-            currX=((e.pageX-bounds.left)/(bounds.right-bounds.left)*width);
-            currY=((e.pageY-bounds.top)/(bounds.bottom-bounds.top)*height);
+ 
+  prevX = currX;
+  prevY = currY;
+  currX=((e.pageX-bounds.left)/(bounds.right-bounds.left)*width);
+  currY=((e.pageY-bounds.top)/(bounds.bottom-bounds.top)*height);
  
   draw();
   if(startDrawing){
   KeepTrack(currX,currY);
-        };
+  };
 };
   
 function mouseDown (e) {
-    if(complete){
-      canvas.removeEventListener('mousedown', mouseDown);
-    }; //return;
-       startDrawing=true;
-      if(!empty){
-       currX=points[points.length-1][0];
-       currY=points[points.length-1][1];
-}   
-     //draw=true;
+  if((complete)||(currX>width)){
+    canvas.removeEventListener('mousedown', mouseDown);
+    return;
+  }; 
+     startDrawing=true;
+  if(!empty){
+     prevX=points[points.length-1][0];
+     prevY=points[points.length-1][1];
+}
+     currX=((e.pageX-bounds.left)/(bounds.right-bounds.left)*width);
+     currY=((e.pageY-bounds.top)/(bounds.bottom-bounds.top)*height);
+  draw();
+  if(startDrawing){
+  KeepTrack(currX,currY);
+      }; 
 };
 
 function draw() {
-  if(move && startDrawing){         
+  if(startDrawing){         
     ctx.beginPath();
     if(empty){
-    prevX=currX;
-    prevY=currY;
-    currX=mintol;
-    currY=height/2;
+    prevX=mintol;
+    prevY=height/2;
     ctx.moveTo(prevX, prevY);
-    ctx.lineTo(currX, currY);
+    ctx.lineTo(currX,currY);
+    KeepTrack(prevX,prevY);
     empty=false;
     } 
-    else if (prevX>maxtol)
+    else if (currX>maxtol)
     { 
-      ctx.moveTo(prevX, prevY);
+      ctx.moveTo(currX, currY);
       ctx.lineTo(width, height/2);
       complete=true;
-      //console.log(points)     
+  
     }
     else if(currX<prevX){
       currX=prevX;
@@ -185,6 +185,7 @@ function draw() {
     else {
       ctx.moveTo(prevX, prevY);
       ctx.lineTo(currX, currY);
+
     }
     ctx.lineWidth=1;
     ctx.lineCap="round";
@@ -216,40 +217,12 @@ function DrawPoints(NewPoints){
 };
 
 
-/*function DrawPoints(NewPoints){
-  ctx.clearRect(0,0,width,height);
-  ctx.beginPath();
-  ctx.moveTo(0, height/2);
-  ctx.lineTo(width, height/2);
-  ctx.lineWidth=0.3;
-  ctx.strokeStyle="white";
-  ctx.stroke();
-  ctx.closePath();
-  var i;
-  ctx.beginPath();
-  //ctx.fillStyle= 'rgba(255,255,255,0.5)';
-  ctx.strokeStyle= 'rgba(255,255,255,0.5)';
-  for(i=1; i<NewPoints.length; i++){
-    ctx.moveTo(NewPoints[i-1][0], NewPoints[i-1][1]);
-    ctx.lineTo(NewPoints[i][0], NewPoints[i][1]);
-    if(i<NewPoints.length/2){ 
-      ctx.lineWidth=0.01;
-    }else{
-      ctx.lineWidth=0.02;
-    }
-    
-    ctx.stroke();
-  };
-  
-  ctx.closePath();
-};*/
-
 function DrawLines(NewPoints){
-  ctx_s.clearRect(0,0,spec_h,spec_w)
+  ctx_s.clearRect(0,0,spec_w,spec_h)
   ctx_s.beginPath();
   ctx_s.fillStyle= "#2772bf";
   for(i=0; i<NewPoints.length; i++){
-  ctx_s.fillRect(NewPoints[i][0]+1, NewPoints[i][1], 3, spec_h - NewPoints[i][1]);
+    ctx_s.fillRect(NewPoints[i][0]+1, NewPoints[i][1], 3, spec_h - NewPoints[i][1]);
   };
   ctx_s.stroke();
   ctx_s.closePath();
@@ -257,7 +230,7 @@ function DrawLines(NewPoints){
 
 
 function ChangeYcord(NewPoints){
-    var i;
+  var i;
   for(i=0; i<NewPoints.length; i++){
     NewPoints[i][1]=(height/2)-NewPoints[i][1]
   }
@@ -269,7 +242,6 @@ function Discretize(){
   startAnim = true;
   DrawPoints(NewPoints);
   ChangeYcord(NewPoints);
-  //console.log(NewPoints);
 };
 
 //Assigning value to the sliders------------------------------------------------------------
@@ -324,8 +296,6 @@ function Animation_damped(){
   const m = document.getElementById("sl_m").value; //2.33 * Math.pow(10,-3);
   const inte = 50;
   const nu = document.getElementById("sl_nu").value; //(2 * m * 0.5)*5;
-  //const nu = (2*Math.PI*Math.sqrt(T*m)) / L +0.1
-  //const nu = 0;
   const i_bar = nu*L/(2*Math.PI*Math.sqrt(T*m));
   console.log("i_bar: " + String(i_bar))
   const alpha = nu/(2*m);
@@ -337,12 +307,12 @@ function Animation_damped(){
   const n_points = NewPoints.length;
   const n_modes = n_points - 2;
   var omega = Array(n_modes).fill(0);
-  var Phi = math.zeros(n_points,n_modes)._data;
+  var Phi = math.zeros(n_points,n_modes)._data; //Phi raws: positions, columns: modes
 
   var Xcord = getCol(NewPoints,0);
   var changedModel = math.zeros(n_points,2)._data;
   var Adapted = math.zeros(n_modes,2)._data;
-  //console.log(changedModel);
+
   var i;
   for(i=0;i<n_points;i++){
     changedModel[i][0] = Xcord[i];
@@ -361,7 +331,6 @@ function Animation_damped(){
     for(i=0;i<model.length;i++){
       changedModel[i][1] = height/2 - model[i];
     }
-  
     DrawPoints(changedModel);
   }
 
@@ -398,8 +367,6 @@ function Animation_damped(){
       Phi[j][i] = Math.sin((i+1)*Math.PI* ((j)*L/(n_points-1)) / L);
     }
   }
-
-  
 
   var w = getCol(NewPoints,1);
  
@@ -444,12 +411,8 @@ function Animation_damped(){
   var i;
   for(i=0; i<n_modes; i++){
     myBuffer[i] = audioContext.createBuffer(1, sr*dur, sr);
-    //let myBuffer=audioContext.createBuffer(1,441000,44100);
-    //let Arraudio=myBuffer.getChannelData(0);
     let Arraudio = myBuffer[i].getChannelData(0); 
-    //var exp= [];
-    //
-    
+
     if(pickup!=0 && pickup!=n_points-1){
       for (let sampleNumber = 0 ; sampleNumber < sr*dur ; sampleNumber++) {     
         Arraudio[sampleNumber] = Phi[pickup-1][i]*Math.exp(-alpha*temp*sampleNumber)*(a_n[i]*Math.sin(omega[i]*temp*sampleNumber) + b_n[i]*Math.cos(omega[i]*temp*sampleNumber));
@@ -575,6 +538,10 @@ function Animation_damped(){
     
 }
 
+reset.onclick = function(){
+  reset_func();
+}
+
 animate.onclick = function() {if(startAnim){
   Animation_damped();
   }
@@ -587,7 +554,6 @@ sound_button.onclick = function(){
     sound_button.innerHTML = "Sound: ON";
   }
   sound_button.classList.toggle("sound_off");
-
 }
 
 sl_anim_speed.onclick = function(){

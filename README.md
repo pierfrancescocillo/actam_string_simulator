@@ -9,7 +9,7 @@ As a project for the Advanced Coding Tools and Methodologies course we decided t
 
 We start considering the string's equation, subject to damping:
 
-<img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial x^2}(x,t)=T\frac{\partial^2 w}{\partial t^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
+<img src="https://render.githubusercontent.com/render/math?math=\Large \mu \frac{\partial^2 w}{\partial t^2}(x,t)=T\frac{\partial^2 w}{\partial x^2}(x,t) - \beta\frac{\partial w}{\partial t}(x,t)">
 
 where μ is the linear density of the string, T is the tension applied to the string, and β is the damping coefficient.
 
@@ -17,7 +17,7 @@ We assume a standing wave solution of the form w(x,t) = Φ(x)G(t)
 
 From the boundary conditions we find out that
 
-<img src="https://render.githubusercontent.com/render/math?math=\large \Phi (x) = sin(\frac{i \pi x}{L})">
+<img src="https://render.githubusercontent.com/render/math?math=\large \Phi_i (x) = sin(\frac{i \pi x}{L})">
 
 With i=1,2,...,N &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; where N is the number of considered modes. The coefficient L represents the length of the string.
 
@@ -88,3 +88,14 @@ In order for the user to decide if he wants the sound to be played, there is a *
 When the animation of the vibration starts, it's frequency spectrum is immediately visualized on the Spectrum analyzer screen. More precisely, the analyzed spectrum is the one of the sound radiated by the mass corresponding to the pickup position. For the sound to be accurate, we created an audio buffer for every mode, which are played toghether.
 
 Furthermore, on the white square is visualized the note which comes closest to the palying sound pitch, found using equal temperament. 
+
+## Try it!
+
+It is possible to try our simulator [here](http://string-simulator.surge.sh/) thanks to the platform Surge.
+
+>Surge: Static web publishing for Front-End Developers. Simple, single-command web publishing. Publish HTML, CSS, and JS for free, without leaving the command line.
+
+## Video Demo
+
+It is possible to see a demonstrative video at the following link: 
+https://youtu.be/3M0fjy72BoY

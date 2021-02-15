@@ -50,7 +50,7 @@ The first thing the user must do, is draw on the blackboard the initial shape of
 ![](screenshots/discretized.png)
 
 After the drawing is concluded, the string shape is discretized, so that it can be treated as a set of point masses.
-Each one of the point masses' vibrations is, then, calculated as the linear combination of it's proper frequencies and modeshapes. <ins>Due to some inaccuracies of mouse tracking, for discretization we also use a line-interpolation library: every shape string is always discretized with 120 points.</ins> 
+Each one of the point masses' vibrations is, then, calculated as the linear combination of it's proper frequencies and modeshapes. Due to some inaccuracies of mouse tracking, to discretise the string we had first to apply a linear interpolation to the points aquired as input. The string shape is discretized in 120 mass points.
 
 We want to focus your attenction on one simple fact: each mass composing the string is totally unrelated to the others. The final vibration of the string as a whole body is a simple consequence of the applyed vibroacoustical theory.
 

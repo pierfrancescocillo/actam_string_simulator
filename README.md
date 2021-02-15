@@ -98,4 +98,4 @@ It is possible to try our simulator [here](http://string-simulator.surge.sh/) th
 ## Video Demo
 
 It is possible to see a demonstrative video at the following link: 
-https://youtu.be/TsT8PIqbbC4
+https://youtu.be/3M0fjy72BoY
